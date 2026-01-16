@@ -1,9 +1,9 @@
 波场TRON能量自助租赁平台,TRX能量租赁机器人，TRX波场能量租赁Telegram机器人！
 
-java开发
-springcloud分布式架构
+java+mysql+redis+rocketmq开发
+springcloud框架
 
-联系TG：@bluex86
+需要看演示联系TG：@bluex86
 
 TRX能量租赁概述
 
