@@ -1,0 +1,178 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  
+  # Nacos Configuration
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        server-addr: localhost:8848
+        namespace: public
+        file-extension: yaml
+        group: DEFAULT_GROUP
+    
+    # Gateway Configuration
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      
+      # Routes Configuration
+      routes:
+        # User Service Routes
+        - id: user-service-route
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Info Service Routes
+        - id: info-service-route
+          uri: lb://info-service
+          predicates:
+            - Path=/api/info/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Trade Service Routes
+        - id: trade-service-route
+          uri: lb://trade-service
+          predicates:
+            - Path=/api/trade/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Notification Service Routes
+        - id: notification-service-route
+          uri: lb://notification-service
+          predicates:
+            - Path=/api/notification/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Seller Service Routes
+        - id: seller-service-route
+          uri: lb://seller-service
+          predicates:
+            - Path=/api/seller/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Buyer Service Routes
+        - id: buyer-service-route
+          uri: lb://buyer-service
+          predicates:
+            - Path=/api/buyer/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Spot Service Routes
+        - id: spot-service-route
+          uri: lb://spot-service
+          predicates:
+            - Path=/api/spot/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # Platform Service Routes
+        - id: platform-service-route
+          uri: lb://platform-service
+          predicates:
+            - Path=/api/platform/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+        
+        # TG Bot Service Routes
+        - id: tg-bot-service-route
+          uri: lb://tg-bot-service
+          predicates:
+            - Path=/api/tg-bot/**
+          filters:
+            - StripPrefix=2
+            - name: Sentinel
+              args:
+                blockHandler: com.trx.feee.apigateway.handler.GlobalBlockHandler
+                blockHandlerClass: com.trx.feee.apigateway.handler.GlobalBlockHandler
+    
+    # Sentinel Configuration
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8719
+      eager: true
+  
+  # Security Configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/oauth2/jwks
+          issuer-uri: http://localhost:8081
+      client:
+        registration:
+          internal-client:
+            provider: oauth2-provider
+            client-id: internal-client
+            client-secret: internal-secret
+            authorization-grant-type: client_credentials
+            scope: internal
+        provider:
+          oauth2-provider:
+            issuer-uri: http://localhost:8081
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+    com.trx.feee.apigateway: info
+    org.springframework.security: debug

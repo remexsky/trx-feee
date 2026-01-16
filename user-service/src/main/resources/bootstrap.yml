@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: user-service
+  
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: public
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        username: nacos
+        password: nacos
